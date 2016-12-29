@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	Netty WebSocket Time Sever
+</head>
+<body>
+	<script type="text/javascript">
+		var socket;
+		if(!window.WebSocket){
+			window.WebSocket = window.MozWebSocket;
+		}
+		if(window.WebSocket){
+			socket = new WebSocket("ws://localhost:8080/websocket");
+			socket.onmessage = function(event) {
+				var ta = document.getElementById('responseText');
+				ta.value = "";
+				ta.value = event.data;
+			};
+			socket.onopen = function(event) {
+				var ta = document.getElementById('responseText');
+				ta.value = "open websocket service successfully!";
+			};
+			socket.onclose = function(event) {
+				var ta = document.getElementById('responseText');
+				ta.value = "";
+				ta.value = "websocket closed."
+			};
+		}else{
+			alert("sorry! your browser do not support websocket protocal.");
+		}
+
+		function send(message){
+			if(!window.WebSocket) {return;}
+			if(socket.readyState == WebSocket.OPEN) {
+				socket.send(message);
+			}else{
+				alert("websocket have not builded.")
+			}
+		}
+	</script>
+	<form onsubmit="return false;">
+		<input type="text" name="message" value="netty implemention"/>
+		<br><br>
+		<input type="button" value="send websocket message" onclick="send(this.form.message.value)"/>
+		<hr>
+		<h3>server response</h3>
+		<textarea id = "responseText" style="width:500px;height:300px;"></textarea>
+	</form>
+	
+
+</body>
+</html>
